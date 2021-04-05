@@ -10,16 +10,14 @@ import tqdm
 import numpy as np
 import torch
 from torch.utils.data import TensorDataset
-
+ 
 
 def retokenize(examples, tokenization_function):
 
     for i, example in tqdm.tqdm(enumerate(examples), desc='retokenizing examples...'):
         if type(example).__name__ == 'ClassificationExample':
-            assert example.tokens_a
             if example.tokens_b is not None:
                 assert example.tokens_b
-            assert example.label
 
             new_tokens_a = []
             for token_a in example.tokens_a:

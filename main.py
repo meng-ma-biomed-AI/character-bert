@@ -77,7 +77,7 @@ def parse_args():
     )
     parser.add_argument(
         "--validation_ratio",
-        default=0.5, type=float, help="Proportion of training set to use as a validation set.")
+        default=0.2, type=float, help="Proportion of training set to use as a validation set.")
     parser.add_argument(
         "--learning_rate",
         default=5e-5, type=float, help="The initial learning rate for Adam.")
