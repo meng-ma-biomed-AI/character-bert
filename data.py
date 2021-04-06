@@ -9,6 +9,7 @@ import pandas as pd
 from utils.data import retokenize
 import text_cleaning_transforerms as tc
 from sklearn.model_selection import train_test_split
+import numpy as np
 
 DATA_PATH = 'data/'
 ClassificationExample = namedtuple(
@@ -20,7 +21,9 @@ SequenceLabellingExample = namedtuple(
 def load_classification_dataset(step, do_lower_case):
     """ Loads classification exampels from a dataset. """
     assert step in ['train', 'test']
-    binary = False   
+    binary = False 
+    undersample_majority = False
+
     path_data = '~/Github/Data/Patient/NIRADS/PET_CT_NIRADS.xlsx'
     data_CT = pd.read_excel(path_data)
     data,_, y, _  = tc.text_cleaning(data_CT, None, data_target='section')
@@ -29,10 +32,25 @@ def load_classification_dataset(step, do_lower_case):
         y[y>0]=1
 
     train_text, test_text, y_train, y_test = train_test_split(data, y, test_size=0.2, random_state=1)
-
     if step =='train':
-        data_to_use = train_text.copy()
-        y_to_use = y_train.copy()
+        if not undersample_majority:
+            data_to_use = train_text.copy()
+            y_to_use = y_train.copy()
+        else:
+            max_label1 = 1000
+            data_to_use = []
+            y_to_use = []
+            y1=0
+            for x in range(len(y_train)):
+                if y_train[x] !=1:
+                    data_to_use.append(train_text[x])
+                    y_to_use.append(y_train[x])
+                else:
+                    if y1 <max_label1:
+                        data_to_use.append(train_text[x])
+                        y_to_use.append(y_train[x])
+                        y1+=1
+
     else:
         data_to_use = test_text.copy()
         y_to_use = y_test.copy()
@@ -107,6 +125,6 @@ def load_sequence_labelling_dataset(step, do_lower_case):
 
 
 if __name__ == '__main__':
-    a = load_classification_dataset('test', True)
-    print(a[0].label)
+    a = load_classification_dataset('train', True)
+    print(len(a))
 
