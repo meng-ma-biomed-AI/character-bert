@@ -24,7 +24,7 @@
 ### Select the queue (also called "partition") to use. The available partitions for your
 ### use are visible using the 'sinfo' command.
 ### You must specify 'gpu' or another partition to have access to the system GPUs.
-#SBATCH -p gpu
+#SBATCH -p rtx
 
 ### (REQUIRED for GPU, otherwise do not specify)
 ### If you select a GPU queue, you must also use the command below to select the number of GPUs
@@ -106,7 +106,7 @@
 ### Your actual commands go below this line. They will be pretty much the same as
 ### those from the older PBS files.
 hostname
-scl enable rh-python36 'python /home/tpsanto/Github/character-bert/main.py --task classification --embedding medical_character_bert --do_lower_case --do_train --do_predict --train_batch_size=4 --eval_batch_size 16 --num_train_epochs 20 --gradient_accumulation_steps 4'
+scl enable rh-python36 'python /home/tpsanto/Github/character-bert/main.py --task classification --data_type mr --data_subtype neck --embedding medical_character_bert --do_lower_case --do_train --do_predict --train_batch_size=4 --eval_batch_size 16 --num_train_epochs 20 --gradient_accumulation_steps 4'
 
 
 

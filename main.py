@@ -94,6 +94,12 @@ def parse_args():
         "--max_grad_norm",
         default=1.0, type=float, help="Max gradient norm.")
     parser.add_argument(
+        "--data_type",
+        default='ct', type=str, help="mr or ct")
+    parser.add_argument(
+        "--data_subtype",
+        default='primary', type=str, help="primary or neck")
+    parser.add_argument(
         "--do_train",
         action="store_true",
         help="Do training & validation."
@@ -116,6 +122,8 @@ def parse_args():
         'results',
         args.task,
         args.embedding,
+        args.data_type,
+        args.data_subtype,
         f'{args.start_time}__seed-{args.seed}')
 
     # --------------------------------- INIT ---------------------------------
@@ -173,7 +181,7 @@ def main(args):
         else:
             raise NotImplementedError
 
-        data[split] = func(step=split, do_lower_case=args.do_lower_case)
+        data[split] = func(step=split, do_lower_case=args.do_lower_case, data_type=args.data_type, data_subtype=args.do_lower_case)
         retokenize(data[split], tokenization_function)
 
     logging.info('Splitting training data into train / validation sets...')

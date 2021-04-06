@@ -18,15 +18,28 @@ SequenceLabellingExample = namedtuple(
     'SequenceLabellingExample', ['id', 'token_sequence', 'label_sequence'])
 
 
-def load_classification_dataset(step, do_lower_case):
+def load_classification_dataset(step, do_lower_case,data_type,data_subtype):
     """ Loads classification exampels from a dataset. """
     assert step in ['train', 'test']
     binary = False 
-    undersample_majority = True
+    undersample_majority = False
 
-    path_data = '~/Github/Data/Patient/NIRADS/PET_CT_NIRADS.xlsx'
-    data_CT = pd.read_excel(path_data)
-    data,_, y, _  = tc.text_cleaning(data_CT, None, data_target='section')
+    paths = ['~/Github/Data/Patient/NIRADS/PET_CT_NIRADS.xlsx', '~/Github/Data/Patient/NIRADS/MR_NIRADS_2018.xlsx','~/Github/Data/Patient/NIRADS/MR_NIRADS.xlsx']
+    if data_type == 'ct':
+        data_r = pd.read_excel(paths[0])
+    else:
+        data_r = pd.read_excel(paths[1])
+        data_r.append(pd.read_excel(paths[2]), ignore_index = True, sort=False)
+
+    data_p,data_n, y_p, y_n  = tc.text_cleaning(data_r, None, data_target='section')
+
+    if data_subtype == 'primary':
+        data = data_p.copy()
+        y = y_p.copy()
+    else:
+        data = data_n.copy()
+        y = y_n.copy()
+
     if binary:
         y[y<2]=0
         y[y>0]=1
@@ -72,7 +85,7 @@ def load_classification_dataset(step, do_lower_case):
     
     return examples
 
-def load_sequence_labelling_dataset(step, do_lower_case):
+def load_sequence_labelling_dataset(step, do_lower_case,data_type,data_subtype):
     """ Loads sequence labelling examples from a dataset. """
     assert step in ['train', 'test']
     path = os.path.join(DATA_PATH, 'sequence_labelling', f'{step}.txt')
@@ -125,6 +138,12 @@ def load_sequence_labelling_dataset(step, do_lower_case):
 
 
 if __name__ == '__main__':
-    a = load_classification_dataset('train', True)
+    a = load_classification_dataset('train', True,'mr', 'primary')
+    print(len(a))
+    a = load_classification_dataset('train', True,'mr', 'neck')
+    print(len(a))
+    a = load_classification_dataset('train', True,'ct', 'primary')
+    print(len(a))
+    a = load_classification_dataset('train', True,'ct', 'neck')
     print(len(a))
 
