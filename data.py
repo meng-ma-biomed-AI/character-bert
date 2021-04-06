@@ -22,7 +22,7 @@ def load_classification_dataset(step, do_lower_case):
     """ Loads classification exampels from a dataset. """
     assert step in ['train', 'test']
     binary = False 
-    undersample_majority = False
+    undersample_majority = True
 
     path_data = '~/Github/Data/Patient/NIRADS/PET_CT_NIRADS.xlsx'
     data_CT = pd.read_excel(path_data)
