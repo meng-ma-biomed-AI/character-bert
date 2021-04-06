@@ -20,7 +20,7 @@ SequenceLabellingExample = namedtuple(
 def load_classification_dataset(step, do_lower_case):
     """ Loads classification exampels from a dataset. """
     assert step in ['train', 'test']
-    binary = True   
+    binary = False   
     path_data = '~/Github/Data/Patient/NIRADS/PET_CT_NIRADS.xlsx'
     data_CT = pd.read_excel(path_data)
     data,_, y, _  = tc.text_cleaning(data_CT, None, data_target='section')
