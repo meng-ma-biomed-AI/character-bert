@@ -33,16 +33,20 @@ def load_classification_dataset(step, do_lower_case,data_type,data_subtype):
 
     data_p,data_n, y_p, y_n  = tc.text_cleaning(data_r, None, data_target='section')
 
+
     if data_subtype == 'primary':
-        data = data_p.copy()
-        y = y_p.copy()
+        data = data_p
+        y = y_p
     else:
-        data = data_n.copy()
-        y = y_n.copy()
+        data = data_n
+        y = y_n
 
     if binary:
         y[y<2]=0
         y[y>0]=1
+
+    y_dist = [np.sum(y==x) for x in np.unique(y)]
+    print("Distribution of labels: ", y_dist, "\n\n")
 
     train_text, test_text, y_train, y_test = train_test_split(data, y, test_size=0.2, random_state=1)
     if step =='train':
@@ -142,8 +146,8 @@ if __name__ == '__main__':
     print(len(a))
     a = load_classification_dataset('train', True,'mr', 'neck')
     print(len(a))
-    a = load_classification_dataset('train', True,'ct', 'primary')
-    print(len(a))
-    a = load_classification_dataset('train', True,'ct', 'neck')
-    print(len(a))
+    # a = load_classification_dataset('train', True,'ct', 'primary')
+    # print(len(a))
+    # a = load_classification_dataset('train', True,'ct', 'neck')
+    # print(len(a))
 

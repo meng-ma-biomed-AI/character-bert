@@ -20,8 +20,10 @@ python download.py --model='medical_character_bert'
 python main.py \
     --task='classification' \
     --embedding='medical_character_bert' \
+    --data_type='ct'\
+    --data_subtype='primary'\
+    --do_test\
     --do_lower_case \
-    --do_train \
     --do_predict \
     --train_batch_size=4 \
     --eval_batch_size=16 \

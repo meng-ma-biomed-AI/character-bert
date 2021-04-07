@@ -16,7 +16,8 @@ from torch.utils.data import SequentialSampler, RandomSampler, DataLoader
 from transformers import AdamW, get_linear_schedule_with_warmup
 
 from utils.misc import set_seed
-
+import matplotlib.pyplot as plt
+import itertools
 
 def train(args, dataset, model, tokenizer, labels, pad_token_label_id):
     """ Trains the given model on the given dataset. """
@@ -143,7 +144,7 @@ def train(args, dataset, model, tokenizer, labels, pad_token_label_id):
     return global_step, tr_loss / global_step, best_metric, best_epoch
 
 
-def evaluate(args, eval_dataset, model, labels, pad_token_label_id):
+def evaluate(args, eval_dataset, model, labels, pad_token_label_id, class_names):
     """ Evaluates the given model on the given dataset. """
 
     # Note that DistributedSampler samples randomly
@@ -157,6 +158,7 @@ def evaluate(args, eval_dataset, model, labels, pad_token_label_id):
     logging.info("***** Running evaluation *****")
     logging.info("  Num examples = %d", len(eval_dataset))
     logging.info("  Batch size = %d", args.eval_batch_size)
+    print("Size Evaluation: ", len(eval_dataset) )
     eval_loss = 0.0
     nb_eval_steps = 0
     preds = None
@@ -194,6 +196,8 @@ def evaluate(args, eval_dataset, model, labels, pad_token_label_id):
             "recall": sklearn_metrics.recall_score(out_label_ids, preds_list, average='micro'),
             "f1": sklearn_metrics.f1_score(out_label_ids, preds_list, average='micro'),
             "accuracy": sklearn_metrics.accuracy_score(out_label_ids, preds_list),
+            "\nconfusion matrix\n": sklearn_metrics.confusion_matrix(out_label_ids, preds_list),
+            "\n\t\t\tClassification Report\n": sklearn_metrics.classification_report(out_label_ids, preds_list, target_names= class_names)
         }
     else:
         preds = np.argmax(preds, axis=2)
@@ -217,3 +221,33 @@ def evaluate(args, eval_dataset, model, labels, pad_token_label_id):
         logging.info("  %s = %s", key, str(results[key]))
 
     return results, preds_list
+
+
+def plot_confusion_matrix(cm, classes, normalize=False, title='Confusion matrix', cmap=plt.cm.Blues, show=False, save='out.png'):
+
+    #Add Normalization Option
+    if normalize:
+        cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
+
+
+    plt.imshow(cm, interpolation='nearest', cmap=cmap)
+    plt.title(title)
+    plt.colorbar()
+    tick_marks = np.arange(len(classes))
+    plt.xticks(tick_marks, classes, rotation=45)
+    plt.yticks(tick_marks, classes)
+
+    fmt = '.2f' if normalize else 'd'
+    thresh = cm.max() / 2.
+    for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
+        plt.text(j, i, format(cm[i, j], fmt), horizontalalignment="center", color="white" if cm[i, j] > thresh else "black")
+
+    plt.tight_layout()
+    plt.ylabel('True label')
+    plt.xlabel('Predicted label')
+    if show:
+        plt.show()
+    plt.savefig(save, bbox_inches='tight')
+
+
+    

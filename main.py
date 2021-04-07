@@ -24,10 +24,11 @@ from data import load_classification_dataset, load_sequence_labelling_dataset
 
 from utils.misc import set_seed
 from utils.data import retokenize, build_features
-from utils.training import train, evaluate
+from utils.training import train, evaluate,plot_confusion_matrix
 
 from download import MODEL_TO_URL
 AVAILABLE_MODELS = list(MODEL_TO_URL.keys()) + ['bert-base-uncased']
+import matplotlib.pyplot as plt
 
 def parse_args():
     """ Parse command line arguments and initialize experiment. """
@@ -100,6 +101,9 @@ def parse_args():
         "--data_subtype",
         default='primary', type=str, help="primary or neck")
     parser.add_argument(
+        "--model_folder",
+        default='run_1', type=str, help="folder to tuned model to be tested")
+    parser.add_argument(
         "--do_train",
         action="store_true",
         help="Do training & validation."
@@ -108,6 +112,11 @@ def parse_args():
         "--do_predict",
         action="store_true",
         help="Do prediction on the test set."
+    )
+    parser.add_argument(
+        "--do_test",
+        action="store_true",
+        help="Test only"
     )
     parser.add_argument(
         "--seed",
@@ -181,7 +190,7 @@ def main(args):
         else:
             raise NotImplementedError
 
-        data[split] = func(step=split, do_lower_case=args.do_lower_case, data_type=args.data_type, data_subtype=args.do_lower_case)
+        data[split] = func(step=split, do_lower_case=args.do_lower_case, data_type=args.data_type, data_subtype=args.data_subtype)
         retokenize(data[split], tokenization_function)
 
     logging.info('Splitting training data into train / validation sets...')
@@ -314,6 +323,17 @@ def main(args):
     # Evaluation on test data
     if args.do_predict:
 
+        args.model_folder
+
+        args.output_dir = os.path.join(
+                        'results',
+                        args.task,
+                        args.embedding,
+                        args.data_type,
+                        args.data_subtype,
+                        args.model_folder)
+
+
         # Load best model
         if args.task == 'classification':
             model = BertForSequenceClassification
@@ -339,13 +359,23 @@ def main(args):
             args=args,
             eval_dataset=dataset["test"],
             model=model, labels=labels,
-            pad_token_label_id=pad_token_label_id
+            pad_token_label_id=pad_token_label_id,
+            class_names = ['NIRADS 1', 'NIRADS 2', 'NIRADS 3', 'NIRADS 4', 'NIRADS 5']
         )
-
         # Save metrics
-        with open(os.path.join(args.output_dir, 'performance_on_test_set.txt'), 'w') as f:
-            f.write(f'best validation score: {best_val_metric}\n')
-            f.write(f'best validation epoch: {best_val_epoch}\n')
+        file = 'performance_on_test_set.txt'
+        cm_out = 'cm_test_' + str(args.data_type) + "_" + str(args.data_subtype) +'.png'
+        if args.do_test:
+            file = 'performance_on_test_set_only.txt'
+
+        # plot_confusion_matrix(results["\nconfusion matrix\n"], classes=['NIRADS 1', 'NIRADS 2', 'NIRADS 3', 'NIRADS 4', 'NIRADS 5'],
+        #                         normalize=False, title='Confusion matrix', cmap=plt.cm.Blues,
+        #                         save=os.path.join(args.output_dir, cm_out))
+
+        with open(os.path.join(args.output_dir, file), 'w') as f:
+            if not args.do_test:
+                f.write(f'best validation score: {best_val_metric}\n')
+                f.write(f'best validation epoch: {best_val_epoch}\n')
             f.write('--- Performance on test set ---\n')
             for k, v in results.items():
                 f.write(f'{k}: {v}\n')
