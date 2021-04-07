@@ -239,7 +239,7 @@ def main(args):
     else:
         raise NotImplementedError
     labels = sorted(counter_all.keys())
-    num_labels = len(labels)
+    num_labels = 5#len(labels)
 
     logging.info("Goal: predict the following labels")
     for i, label in enumerate(labels):
