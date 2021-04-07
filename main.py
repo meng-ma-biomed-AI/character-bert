@@ -323,15 +323,14 @@ def main(args):
     # Evaluation on test data
     if args.do_predict:
 
-        args.model_folder
-
-        args.output_dir = os.path.join(
-                        'results',
-                        args.task,
-                        args.embedding,
-                        args.data_type,
-                        args.data_subtype,
-                        args.model_folder)
+        if args.do_test:
+            args.output_dir = os.path.join(
+                            'results',
+                            args.task,
+                            args.embedding,
+                            args.data_type,
+                            args.data_subtype,
+                            args.model_folder)
 
 
         # Load best model
