@@ -132,6 +132,9 @@ def text_cleaning(data, seeds=None, data_target="all", only_data = False,steam=F
   for i in tqdm(range(data.shape[0]),desc ="Cleaning Data"):
     txt = data.iloc[i]['Radiology Text']
     exam = data.iloc[i]['Exam Name'].lower() # if report does not include neck, then do not add it
+    y_p = data.iloc[i]['NIRADS_Primary']
+    y_n = data.iloc[i]['NIRADS_Neck']
+
     if re.search("FINDINGS:", txt):
 
       txt = txt.split("FINDINGS:")[1].split("Legend")[0]#.replace('\n', ' ')
@@ -158,8 +161,11 @@ def text_cleaning(data, seeds=None, data_target="all", only_data = False,steam=F
       primary_data = re.sub('-{2,}', "", primary_data) # remove dashes
       primary_data = re.sub(' +', ' ', primary_data) # remove double+ spaces
 
-      
-      primary_sentences.append(remove_noise_text(primary_data))
+
+      if y_p !=0:      
+        primary_sentences.append(remove_noise_text(primary_data))
+      else:
+        y_p_delete.append(i)
 
 
       if re.search("neck", exam) and re.search("neck:", txt):
@@ -185,7 +191,11 @@ def text_cleaning(data, seeds=None, data_target="all", only_data = False,steam=F
         neck_data = re.sub('-{2,}', "", neck_data) # remove dashes
         neck_data = re.sub(' +', ' ', neck_data) # remove double+ spaces
 
-        neck_sentences.append(remove_noise_text(neck_data))
+        if y_n !=0:      
+          neck_sentences.append(remove_noise_text(neck_data))
+        else:
+          y_n_delete.append(i)
+          
       else:
         y_n_delete.append(i) # remove neck report for the classification
 

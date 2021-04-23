@@ -36,10 +36,10 @@ def load_classification_dataset(step, do_lower_case,data_type,data_subtype):
 
     if data_subtype == 'primary':
         data = data_p
-        y = y_p
+        y = y_p -1
     else:
         data = data_n
-        y = y_n
+        y = y_n -1
 
     if binary:
         y[y<2]=0
@@ -142,9 +142,9 @@ def load_sequence_labelling_dataset(step, do_lower_case,data_type,data_subtype):
 
 
 if __name__ == '__main__':
-    a = load_classification_dataset('train', True,'mr', 'primary')
+    a = load_classification_dataset('train', True,'ct', 'primary')
     print(len(a))
-    a = load_classification_dataset('train', True,'mr', 'neck')
+    a = load_classification_dataset('train', True,'ct', 'neck')
     print(len(a))
     # a = load_classification_dataset('train', True,'ct', 'primary')
     # print(len(a))

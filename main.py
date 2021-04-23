@@ -239,7 +239,7 @@ def main(args):
     else:
         raise NotImplementedError
     labels = sorted(counter_all.keys())
-    num_labels = 5#len(labels)
+    num_labels = 4#len(labels)
 
     logging.info("Goal: predict the following labels")
     for i, label in enumerate(labels):
@@ -270,7 +270,8 @@ def main(args):
             max_seq_length=max_seq_length)
 
     del data  # Not used anymore
-
+    print(dataset)
+    exit()
     # --------------------------------- MODEL ---------------------------------
 
     # Initialize model
