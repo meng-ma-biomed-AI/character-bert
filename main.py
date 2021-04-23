@@ -270,8 +270,7 @@ def main(args):
             max_seq_length=max_seq_length)
 
     del data  # Not used anymore
-    print(dataset)
-    exit()
+
     # --------------------------------- MODEL ---------------------------------
 
     # Initialize model

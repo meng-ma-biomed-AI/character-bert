@@ -22,10 +22,10 @@ python main.py \
     --embedding='medical_character_bert' \
     --data_type='ct'\
     --data_subtype='primary'\
-    --do_test\
+    --do_train \
     --do_lower_case \
     --do_predict \
     --train_batch_size=4 \
     --eval_batch_size=16 \
-    --num_train_epochs=1
+    --num_train_epochs=20
 set +x
