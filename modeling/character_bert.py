@@ -5,7 +5,8 @@
 import torch
 from torch import nn
 
-from transformers.models.bert.modeling_bert import BertPreTrainedModel, BertEncoder, BertPooler
+
+from transformers.modeling_bert import BertPreTrainedModel, BertEncoder, BertPooler
 
 from modeling.character_cnn import CharacterCNN
 
