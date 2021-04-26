@@ -4,7 +4,8 @@
 """ Indexer functions for ELMo-style character embeddings. """
 from typing import Dict, List, Callable, Any
 import torch
-
+import ctypes
+libgcc_s = ctypes.CDLL('libgcc_s.so.1')
 PADDING_VALUE = 0
 
 

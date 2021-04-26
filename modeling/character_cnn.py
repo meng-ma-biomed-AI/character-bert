@@ -8,7 +8,8 @@ from typing import Dict, Callable
 
 import numpy
 import torch
-
+import ctypes
+libgcc_s = ctypes.CDLL('libgcc_s.so.1')
 from utils.character_cnn import CharacterMapper, CharacterIndexer
 
 

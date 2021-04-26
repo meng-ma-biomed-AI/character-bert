@@ -18,6 +18,8 @@ from transformers import AdamW, get_linear_schedule_with_warmup
 from utils.misc import set_seed
 import matplotlib.pyplot as plt
 import itertools
+import ctypes
+libgcc_s = ctypes.CDLL('libgcc_s.so.1')
 
 def train(args, dataset, model, tokenizer, labels, pad_token_label_id):
     """ Trains the given model on the given dataset. """

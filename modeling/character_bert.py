@@ -4,7 +4,8 @@
 """ Defines the main CharacterBERT PyTorch class. """
 import torch
 from torch import nn
-
+import ctypes
+libgcc_s = ctypes.CDLL('libgcc_s.so.1')
 
 from transformers.modeling_bert import BertPreTrainedModel, BertEncoder, BertPooler
 
