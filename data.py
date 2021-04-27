@@ -26,7 +26,7 @@ def load_classification_dataset(step, do_lower_case,data_type,data_subtype):
 
     paths = ['~/Github/Data/Patient/NIRADS/PET_CT_NIRADS.xlsx', '~/Github/Data/Patient/NIRADS/MR_NIRADS_2018.xlsx','~/Github/Data/Patient/NIRADS/MR_NIRADS.xlsx']
     if data_type == 'ct':
-        data_r = pd.read_excel(paths[0],nrows=100)
+        data_r = pd.read_excel(paths[0])
     else:
         data_r = pd.read_excel(paths[1])
         data_r.append(pd.read_excel(paths[2]), ignore_index = True, sort=False)
