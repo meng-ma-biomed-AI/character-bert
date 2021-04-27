@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 #
 # This is an example SBATCH script "slurm_example_script.sh"
 # For all available options, see the 'sbatch' manpage.
@@ -105,11 +105,5 @@
 
 ### Your actual commands go below this line. They will be pretty much the same as
 ### those from the older PBS files.
-conda init bash
-conda activate env1
-scl enable rh-python36 'python /home/tpsanto/Github/character-bert/main.py --task classification --data_type ct --data_subtype neck --embedding medical_character_bert --do_lower_case --do_train --do_predict --train_batch_size=8 --eval_batch_size 16 --num_train_epochs 20 --gradient_accumulation_steps 4'
-
-
-
-
-
+scl enable rh-python36 bash 
+bash -i ./script_run_ct_neck_run.sh
