@@ -30,8 +30,7 @@ from download import MODEL_TO_URL
 AVAILABLE_MODELS = list(MODEL_TO_URL.keys()) + ['bert-base-uncased']
 import matplotlib.pyplot as plt
 
-import ctypes
-libgcc_s = ctypes.CDLL('libgcc_s.so.1')
+
 def parse_args():
     """ Parse command line arguments and initialize experiment. """
     parser = argparse.ArgumentParser()
@@ -241,8 +240,7 @@ def main(args):
     else:
         raise NotImplementedError
     labels = sorted(counter_all.keys())
-    print(labels)
-    exit()
+
     num_labels = 4#len(labels)
 
     logging.info("Goal: predict the following labels")
