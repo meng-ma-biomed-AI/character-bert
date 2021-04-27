@@ -145,7 +145,7 @@ def train(args, dataset, model, tokenizer, labels, pad_token_label_id):
     return global_step, tr_loss / global_step, best_metric, best_epoch
 
 
-def evaluate(args, eval_dataset, model, labels, pad_token_label_id, class_names = ['NIRADS 1', 'NIRADS 2', 'NIRADS 3', 'NIRADS 4', 'NIRADS 5']):
+def evaluate(args, eval_dataset, model, labels, pad_token_label_id, class_names = ['NIRADS 1', 'NIRADS 2', 'NIRADS 3', 'NIRADS 4']):
     """ Evaluates the given model on the given dataset. """
 
     # Note that DistributedSampler samples randomly
