@@ -360,7 +360,7 @@ def main(args):
             eval_dataset=dataset["test"],
             model=model, labels=labels,
             pad_token_label_id=pad_token_label_id,
-            class_names = ['NIRADS 1', 'NIRADS 2', 'NIRADS 3', 'NIRADS 4', 'NIRADS 5']
+            class_names = ['NIRADS 1', 'NIRADS 2', 'NIRADS 3', 'NIRADS 4']
         )
         # Save metrics
         file = 'performance_on_test_set.txt'
