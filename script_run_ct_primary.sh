@@ -24,7 +24,7 @@
 ### Select the queue (also called "partition") to use. The available partitions for your
 ### use are visible using the 'sinfo' command.
 ### You must specify 'gpu' or another partition to have access to the system GPUs.
-#SBATCH -p gpu
+#SBATCH -p rtx
 
 ### (REQUIRED for GPU, otherwise do not specify)
 ### If you select a GPU queue, you must also use the command below to select the number of GPUs
@@ -70,7 +70,7 @@
 ###                       your job's available memory will be limited to a default value
 ###                       which may not be high enough for your code to run successfully.
 ###                       This value is for the amount of RAM per computational node.
-#SBATCH --mem 12G
+#SBATCH --mem 50G
 
 ### (optional)
 ### Request 4 cpus/threads - Specify a value for this function if you know your code uses
