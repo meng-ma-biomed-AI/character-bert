@@ -110,6 +110,11 @@ def parse_args():
         help="Do training & validation."
     )
     parser.add_argument(
+        "--use_syntetic_data",
+        action="store_true",
+        help="Use syntetic data"
+    )
+    parser.add_argument(
         "--do_predict",
         action="store_true",
         help="Do prediction on the test set."
@@ -191,14 +196,15 @@ def main(args):
         else:
             raise NotImplementedError
 
-        data[split] = func(step=split, do_lower_case=args.do_lower_case, data_type=args.data_type, data_subtype=args.data_subtype)
+        data[split] = func(step=split, do_lower_case=args.do_lower_case, data_type=args.data_type, data_subtype=args.data_subtype, use_syntetic_data=args.use_syntetic_data)
         retokenize(data[split], tokenization_function)
 
-    logging.info('Splitting training data into train / validation sets...')
-    data['validation'] = data['train'][:int(args.validation_ratio * len(data['train']))]
-    data['train'] = data['train'][int(args.validation_ratio * len(data['train'])):]
-    logging.info('New number of training sequences: %d', len(data['train']))
-    logging.info('New number of validation sequences: %d', len(data['validation']))
+    # logging.info('Splitting training data into train / validation sets...')
+    # data['validation'] = data['train'][:int(args.validation_ratio * len(data['train']))]
+    # data['train'] = data['train'][int(args.validation_ratio * len(data['train'])):]
+    # logging.info('New number of training sequences: %d', len(data['train']))
+    # logging.info('New number of validation sequences: %d', len(data['validation']))
+    data['validation'] = []
 
     # Count target labels or classes
     if args.task == 'classification':

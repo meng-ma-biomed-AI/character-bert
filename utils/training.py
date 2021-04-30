@@ -117,7 +117,7 @@ def train(args, dataset, model, tokenizer, labels, pad_token_label_id):
                     # -- Only evaluate when single GPU otherwise metrics may not average well
                     results, _ = evaluate(
                         args=args,
-                        eval_dataset=dataset["validation"],
+                        eval_dataset=dataset["test"],
                         model=model, labels=labels,
                         pad_token_label_id=pad_token_label_id
                     )
@@ -193,9 +193,9 @@ def evaluate(args, eval_dataset, model, labels, pad_token_label_id, class_names 
         preds_list = np.argmax(preds, axis=1)
         results = {
             "loss": eval_loss,
-            "precision": sklearn_metrics.precision_score(out_label_ids, preds_list, average='micro'),
-            "recall": sklearn_metrics.recall_score(out_label_ids, preds_list, average='micro'),
-            "f1": sklearn_metrics.f1_score(out_label_ids, preds_list, average='micro'),
+            "precision": sklearn_metrics.precision_score(out_label_ids, preds_list, average='macro'),
+            "recall": sklearn_metrics.recall_score(out_label_ids, preds_list, average='macro'),
+            "f1": sklearn_metrics.f1_score(out_label_ids, preds_list, average='macro'),
             "accuracy": sklearn_metrics.accuracy_score(out_label_ids, preds_list),
             "\nconfusion matrix\n": sklearn_metrics.confusion_matrix(out_label_ids, preds_list),
             "\n\t\t\tClassification Report\n": sklearn_metrics.classification_report(out_label_ids, preds_list, target_names= class_names)

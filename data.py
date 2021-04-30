@@ -18,7 +18,7 @@ SequenceLabellingExample = namedtuple(
     'SequenceLabellingExample', ['id', 'token_sequence', 'label_sequence'])
 
 
-def load_classification_dataset(step, do_lower_case,data_type,data_subtype):
+def load_classification_dataset(step, do_lower_case,data_type,data_subtype,use_syntetic_data):
     """ Loads classification exampels from a dataset. """
     assert step in ['train', 'test']
     binary = False 
@@ -32,7 +32,11 @@ def load_classification_dataset(step, do_lower_case,data_type,data_subtype):
         data_r.append(pd.read_excel(paths[2]), ignore_index = True, sort=False)
 
     data_p,data_n, y_p, y_n  = tc.text_cleaning(data_r, None, data_target='section')
-
+    if step == 'train':
+        if use_syntetic_data:
+            data_syntetic = pd.read_csv('~/Github/Data/Patient/NIRADS/PET_CT_NIRADS_syntetic.csv')
+            data_p = np.concatenate((data_p,data_syntetic['syntetic_data'].tolist()))
+            y_p = np.concatenate((y_p,data_syntetic['syntetic_label'].tolist()))
 
     if data_subtype == 'primary':
         data = data_p
@@ -142,10 +146,7 @@ def load_sequence_labelling_dataset(step, do_lower_case,data_type,data_subtype):
 
 
 if __name__ == '__main__':
-    a = load_classification_dataset('train', True,'ct', 'primary')
-    print(len(a))
-    a = load_classification_dataset('train', True,'ct', 'neck')
-    print(len(a))
+    a = load_classification_dataset('train', True,'ct', 'primary',use_syntetic_data=True)
     # a = load_classification_dataset('train', True,'ct', 'primary')
     # print(len(a))
     # a = load_classification_dataset('train', True,'ct', 'neck')
