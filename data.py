@@ -31,12 +31,7 @@ def load_classification_dataset(step, do_lower_case,data_type,data_subtype,use_s
         data_r = pd.read_excel(paths[1])
         data_r.append(pd.read_excel(paths[2]), ignore_index = True, sort=False)
 
-    data_p,data_n, y_p, y_n  = tc.text_cleaning(data_r, None, data_target='section')
-    if step == 'train':
-        if use_syntetic_data:
-            data_syntetic = pd.read_csv('~/Github/Data/Patient/NIRADS/PET_CT_NIRADS_syntetic.csv')
-            data_p = np.concatenate((data_p,data_syntetic['syntetic_data'].tolist()))
-            y_p = np.concatenate((y_p,data_syntetic['syntetic_label'].tolist()))
+    data_p,data_n, y_p, y_n  = tc.text_cleaning(data_r, None, data_target='section')        
 
     if data_subtype == 'primary':
         data = data_p
@@ -50,10 +45,25 @@ def load_classification_dataset(step, do_lower_case,data_type,data_subtype,use_s
         y[y>0]=1
 
     y_dist = [np.sum(y==x) for x in np.unique(y)]
-    print("Distribution of labels: ", y_dist, "\n\n")
+    print("Distribution of all labels: ", y_dist, "\n\n")
 
     train_text, test_text, y_train, y_test = train_test_split(data, y, test_size=0.2, random_state=1)
+
+    y_dist = [np.sum(y_train==x) for x in np.unique(y_train)]
+    print("Distribution of training labels: ", y_dist, "\n\n")
+
     if step =='train':
+        if use_syntetic_data:
+            data_syntetic = pd.read_csv('~/Github/Data/Patient/NIRADS/PET_CT_NIRADS_syntetic.csv')
+            train_text = np.concatenate((train_text,data_syntetic['syntetic_data'].values))
+            y_train = np.concatenate((y_train,data_syntetic['syntetic_label'].values-1))
+
+            train_text, test_text, y_train, y_test = train_test_split(train_text, y_train, test_size=0.5, random_state=1)
+            train_text = np.concatenate((train_text,test_text))
+            y_train = np.concatenate((y_train,y_test))
+            y_dist = [np.sum(y_train==x) for x in np.unique(y_train)]
+            print("Distribution of training labels after inserting syntetic data: ", y_dist, "\n\n")
+
         if not undersample_majority:
             data_to_use = train_text.copy()
             y_to_use = y_train.copy()
